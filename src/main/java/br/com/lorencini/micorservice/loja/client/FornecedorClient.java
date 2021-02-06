@@ -1,10 +1,15 @@
 package br.com.lorencini.micorservice.loja.client;
 
+import java.util.List;
+
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
+import br.com.lorencini.micorservice.loja.controller.dto.ItemDACompraDTO;
 import br.com.lorencini.micorservice.loja.dto.InfoFornecedorDTO;
+import br.com.lorencini.micorservice.loja.dto.InfoPedidoDTO;
 
 //IMPLEMENTACAO DO CLIENT
 
@@ -18,7 +23,10 @@ public interface FornecedorClient {
 	//implementar os metodos dos servicos que vamos acessar
 	
 	@RequestMapping("/info/{estado}")
-	public InfoFornecedorDTO getInfoPorEstado(@PathVariable String estado);
+	InfoFornecedorDTO getInfoPorEstado(@PathVariable String estado);
+	
+	@RequestMapping(method = RequestMethod.POST, value = "/pedido")
+	InfoPedidoDTO realizaPedido(List<ItemDACompraDTO> itens);
 	
 
 }

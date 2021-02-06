@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import br.com.lorencini.micorservice.loja.client.FornecedorClient;
 import br.com.lorencini.micorservice.loja.controller.dto.CompraDTO;
 import br.com.lorencini.micorservice.loja.dto.InfoFornecedorDTO;
+import br.com.lorencini.micorservice.loja.dto.InfoPedidoDTO;
+import br.com.lorencini.micorservice.loja.model.Compra;
 
 @Service
 public class CompraService {
@@ -26,12 +28,22 @@ public class CompraService {
 	@Autowired
 	private FornecedorClient fornecedorClient;
 	
-	public void realizaCompra(CompraDTO compra) {
+	public Compra realizaCompra(CompraDTO compra) {
 		
 		//faz a requis para o fornecedor
 		InfoFornecedorDTO infoPorEstado = fornecedorClient.getInfoPorEstado(compra.getEndereco().getEstado());
 		
+		//passar os dados da compra http://localhost:8080/compra
+		InfoPedidoDTO pedido = fornecedorClient.realizaPedido(compra.getItens());
+		
 		System.out.println(infoPorEstado.getEndereco());
+		
+		Compra compraSalva = new Compra();
+		compraSalva.setPedidoId(pedido.getId());
+		compraSalva.setTempoDePreparo(pedido.getTempoDePreparo());
+		compraSalva.setEnderecoDestino(compra.getEndereco().toString());
+		
+		return compraSalva;
 
 		/*
 		 * ResponseEntity<InfoFornecedorDTO> exchange =
